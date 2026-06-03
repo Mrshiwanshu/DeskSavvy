@@ -52,9 +52,9 @@ DB_PASSWORD is set: <%= System.getenv("DB_PASSWORD") != null && !System.getenv("
     <h3>4. Connection Attempt</h3>
     <pre>
 <%
-    String dbUrl = System.getenv("DB_URL");
-    String dbUser = System.getenv("DB_USER");
-    String dbPassword = System.getenv("DB_PASSWORD");
+    String dbUrl = System.getenv("DB_URL") != null ? System.getenv("DB_URL").trim().replaceAll("\\r|\\n", "") : null;
+    String dbUser = System.getenv("DB_USER") != null ? System.getenv("DB_USER").trim().replaceAll("\\r|\\n", "") : null;
+    String dbPassword = System.getenv("DB_PASSWORD") != null ? System.getenv("DB_PASSWORD").trim().replaceAll("\\r|\\n", "") : null;
     if (dbUrl == null || dbUrl.isEmpty()) {
         out.println("Skipping connection: DB_URL is not set.");
     } else {

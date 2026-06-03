@@ -12,9 +12,9 @@ public class DBconnection {
   try
   {
   Class.forName("com.mysql.cj.jdbc.Driver");
-  String dbUrl = System.getenv("DB_URL") != null ? System.getenv("DB_URL") : "jdbc:mysql://localhost:3306/virtual_office";
-  String dbUser = System.getenv("DB_USER") != null ? System.getenv("DB_USER") : "root";
-  String dbPassword = System.getenv("DB_PASSWORD") != null ? System.getenv("DB_PASSWORD") : "root";
+  String dbUrl = System.getenv("DB_URL") != null ? System.getenv("DB_URL").trim().replaceAll("\\r|\\n", "") : "jdbc:mysql://localhost:3306/virtual_office";
+  String dbUser = System.getenv("DB_USER") != null ? System.getenv("DB_USER").trim().replaceAll("\\r|\\n", "") : "root";
+  String dbPassword = System.getenv("DB_PASSWORD") != null ? System.getenv("DB_PASSWORD").trim().replaceAll("\\r|\\n", "") : "root";
   con=DriverManager.getConnection(dbUrl, dbUser, dbPassword);
   }
   catch(Exception e)
