@@ -6,6 +6,7 @@ public class DBconnection {
   public PreparedStatement pstmt=null;
   public ResultSet rst=null;
   public ResultSet rst1=null;
+  public String connectionError=null;
   public DBconnection()
   {
   try
@@ -19,6 +20,7 @@ public class DBconnection {
   catch(Exception e)
   {
   e.printStackTrace();
+  connectionError = e.getMessage() != null ? e.getMessage() : e.toString();
   }
   }
   }

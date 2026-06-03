@@ -39,7 +39,7 @@ public class emplogin extends HttpServlet {
             DBconnection db=new DBconnection();
             
             if (db.con == null) {
-                throw new Exception("Database connection failed. Please check your cloud database configuration.");
+                throw new Exception("Database connection failed: " + db.connectionError);
             }
            
             db.pstmt=db.con.prepareStatement("select com_id from emp_login where emp_id=? and password=?");

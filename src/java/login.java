@@ -40,7 +40,7 @@ public class login extends HttpServlet {
             out.println(user);
             DBconnection db=new DBconnection();
             if (db.con == null) {
-                throw new Exception("Database connection failed. Please check your cloud database configuration.");
+                throw new Exception("Database connection failed: " + db.connectionError);
             }
            
             db.pstmt=db.con.prepareStatement("select u_type from company_login where id=? and pass=?");
