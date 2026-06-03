@@ -37,35 +37,33 @@ public class emplogin extends HttpServlet {
             String user=request.getParameter("t1");
             String pass=request.getParameter("t2");
             DBconnection db=new DBconnection();
+            
+            if (db.con == null) {
+                throw new Exception("Database connection failed. Please check your cloud database configuration.");
+            }
            
-            db.pstmt=db.con.prepareStatement("select com_id from emp_login where emp_id='"+user+"' and password='"+pass+"'");
+            db.pstmt=db.con.prepareStatement("select com_id from emp_login where emp_id=? and password=?");
+            db.pstmt.setString(1, user);
+            db.pstmt.setString(2, pass);
            
-             db.rst= db.pstmt.executeQuery();
-             if(db.rst.next())
-             {
-             String com_id=db.rst.getString(1);
+            db.rst= db.pstmt.executeQuery();
+            if(db.rst.next())
+            {
+                String com_id=db.rst.getString(1);
           
-              st.setAttribute("user2", user);
-             st.setAttribute("pass2", pass);
-             st.setAttribute("comp", com_id);
+                st.setAttribute("user2", user);
+                st.setAttribute("pass2", pass);
+                st.setAttribute("comp", com_id);
             
-             // st.setAttribute("type2",type1);
-             response.sendRedirect("empHome.jsp");
-           
-             }
-             else
-             {
-             
-              response.sendRedirect("support.jsp?msg=Invalid User id and password!!!");
-           
-             
-             }
-        
-        
-        
+                response.sendRedirect("empHome.jsp");
+            }
+            else
+            {
+                response.sendRedirect("support.jsp?msg=Invalid User id and password!!!");
+            }
         } catch(Exception e) {            
-            
             e.printStackTrace();
+            response.sendRedirect("support.jsp?msg=" + java.net.URLEncoder.encode(e.getMessage() != null ? e.getMessage() : e.toString(), "UTF-8"));
         }
     }
 

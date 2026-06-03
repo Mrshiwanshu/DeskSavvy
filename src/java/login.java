@@ -39,8 +39,13 @@ public class login extends HttpServlet {
             out.println(type);
             out.println(user);
             DBconnection db=new DBconnection();
+            if (db.con == null) {
+                throw new Exception("Database connection failed. Please check your cloud database configuration.");
+            }
            
-            db.pstmt=db.con.prepareStatement("select u_type from company_login where id='"+user+"' and pass='"+pass+"'");
+            db.pstmt=db.con.prepareStatement("select u_type from company_login where id=? and pass=?");
+            db.pstmt.setString(1, user);
+            db.pstmt.setString(2, pass);
            
              db.rst= db.pstmt.executeQuery();
              if(db.rst.next())
@@ -84,17 +89,13 @@ public class login extends HttpServlet {
              
                  }
              
-                        
-                        
-             
-               
-        
-             
-             
-             
-
         } catch(Exception e) {            
             e.printStackTrace();
+            try {
+                response.sendRedirect("index.jsp?msg=" + java.net.URLEncoder.encode(e.getMessage() != null ? e.getMessage() : e.toString(), "UTF-8"));
+            } catch(Exception ex) {
+                ex.printStackTrace();
+            }
         }
     }
  // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
