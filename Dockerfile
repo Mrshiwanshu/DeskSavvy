@@ -1,19 +1,22 @@
-# Stage 1: Build the application using Tomcat base image to have access to JEE APIs
+# Stage 1: Build the application using standard javac and jar tools
 FROM tomcat:8.5-jdk8-temurin AS builder
-
-# Install Apache Ant
-RUN apt-get update && apt-get install -y ant && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
 
 # Copy all project files
 COPY . .
 
-# Run Ant to compile and build the WAR file with correct JEE classpath and copylibs jar
-RUN ant \
-    -Dlibs.CopyLibs.classpath=lib/org-netbeans-modules-java-j2seproject-copylibstask.jar \
-    -Dj2ee.platform.classpath=/usr/local/tomcat/lib/servlet-api.jar:/usr/local/tomcat/lib/jsp-api.jar:/usr/local/tomcat/lib/el-api.jar \
-    dist
+# Create classes directory inside WEB-INF
+RUN mkdir -p web/WEB-INF/classes
+
+# Compile all Java sources under src/java into classes directory
+RUN find src/java -name "*.java" > sources.txt && \
+    javac -d web/WEB-INF/classes -cp "/usr/local/tomcat/lib/*:web/WEB-INF/lib/*" @sources.txt
+
+# Package the web/ directory into a WAR file
+RUN mkdir -p dist && \
+    cd web && \
+    jar cf ../dist/DeskSavvy.war .
 
 # Stage 2: Deploy to Apache Tomcat
 FROM tomcat:8.5-jdk8-temurin
