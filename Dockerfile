@@ -1,7 +1,7 @@
-# Stage 1: Build the application using OpenJDK 8 and Apache Ant
-FROM openjdk:8-jdk-slim AS builder
+# Stage 1: Build the application using Eclipse Temurin JDK 8
+FROM eclipse-temurin:8-jdk AS builder
 
-# Install Ant
+# Install Apache Ant
 RUN apt-get update && apt-get install -y ant && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
@@ -12,8 +12,8 @@ COPY . .
 # Run Ant to compile and build the WAR file
 RUN ant dist
 
-# Stage 2: Deploy to Apache Tomcat
-FROM tomcat:8.5-jdk8-openjdk-slim
+# Stage 2: Deploy to Apache Tomcat with Temurin JDK 8
+FROM tomcat:8.5-jdk8-temurin
 
 # Remove Tomcat's default web applications to keep the root path clean
 RUN rm -rf /usr/local/tomcat/webapps/*
