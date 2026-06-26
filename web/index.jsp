@@ -588,13 +588,13 @@
         <div class="card-eyebrow">Secure Access</div>
         <h2>Welcome back</h2>
         <p>Sign in to your DeskSavvy account </p>
-<p>Use ID:1212   Pass: 1212 </p>
+        <p>Use ID:1212   Pass: 1212 </p>
 
         <form action="login" method="get">
 
           <!-- User ID — name="t2" preserved -->
           <div class="field-wrap">
-            <label class="field-label">User ID</label>
+            <label class="field-label">User ID :1212</label>
             <div class="field-inner">
               <input type="text" name="t2" placeholder="Enter your user ID" required />
               <i class="fas fa-user"></i>
@@ -603,7 +603,7 @@
 
           <!-- Password — name="t3" preserved -->
           <div class="field-wrap">
-            <label class="field-label">Password</label>
+            <label class="field-label">Password:1212</label>
             <div class="field-inner">
               <input type="password" name="t3" placeholder="••••••••" required />
               <i class="fas fa-lock"></i>
