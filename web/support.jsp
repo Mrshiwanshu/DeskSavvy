@@ -501,7 +501,7 @@
 
             <!-- User ID — name="t1" preserved -->
             <div class="field-wrap">
-              <label class="field-label">User ID</label>
+              <label class="field-label">User ID:111</label>
               <div class="field-inner">
                 <input type="text" name="t1" placeholder="Enter your user ID" />
                 <i class="fas fa-envelope"></i>
@@ -510,7 +510,7 @@
 
             <!-- Password — name="t2" preserved -->
             <div class="field-wrap">
-              <label class="field-label">Password</label>
+              <label class="field-label">Password:111</label>
               <div class="field-inner">
                 <input type="password" name="t2" placeholder="••••••••" />
                 <i class="fas fa-lock"></i>
