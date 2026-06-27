@@ -653,7 +653,7 @@
           <div class="dev-photo-wrap">
             <img
               class="dev-photo"
-              src="images/userpic.gif"
+              src="images/shiwanshu.jpeg"
               alt="Shiwanshu Chourasia - Software Developer"
             />
             <div class="dev-badge">Developer</div>
