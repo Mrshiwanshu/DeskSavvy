@@ -353,11 +353,18 @@
 
                         <button type="submit" class="btn-submit">Update Security Key</button>
 
-                        <% String abc=request.getParameter("msg"); if(abc !=null && !abc.trim().isEmpty()) {
-                            out.println("<div class='alert-msg'><i class='fas fa-info-circle'></i> " + abc + "
-                </div>");
-                }
-                %>
+                      <%
+String abc = request.getParameter("msg");
+%>
+
+<% if(abc != null && !abc.trim().isEmpty()) { %>
+
+<div class="alert-msg">
+    <i class="fas fa-info-circle"></i>
+    <%= abc %>
+</div>
+
+<% } %>
 
                 </form>
 
