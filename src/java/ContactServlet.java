@@ -60,7 +60,21 @@ public class ContactServlet extends HttpServlet {
             conn.setRequestMethod("POST");
             conn.setDoOutput(true);
             conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-            conn.setRequestProperty("User-Agent", "DeskSavvy/1.0");
+            conn.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36");
+            
+            // Set Referer and Origin headers to ensure FormSubmit knows where the query came from
+            String referer = request.getHeader("Referer");
+            if (referer == null) {
+                referer = "https://desksavvy-rnp1.onrender.com/contact.jsp";
+            }
+            conn.setRequestProperty("Referer", referer);
+            
+            String origin = request.getHeader("Origin");
+            if (origin == null) {
+                origin = "https://desksavvy-rnp1.onrender.com";
+            }
+            conn.setRequestProperty("Origin", origin);
+            
             conn.setConnectTimeout(10000);
             conn.setReadTimeout(10000);
             
