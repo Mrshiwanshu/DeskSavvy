@@ -55,7 +55,7 @@ public class ContactServlet extends HttpServlet {
                     + "&_subject=" + URLEncoder.encode("New Contact Query from DeskSavvy", "UTF-8")
                     + "&_captcha=false";
             
-            URL url = new URL("https://formsubmit.co/shiwanshu7545@gmail.com");
+            URL url = new URL("https://formsubmit.co/el/jomola");
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("POST");
             conn.setDoOutput(true);
