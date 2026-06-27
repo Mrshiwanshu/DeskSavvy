@@ -15,6 +15,7 @@ public class ContactServlet extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
+        PrintWriter out = response.getWriter();
         
         String name = request.getParameter("name");
         String email = request.getParameter("email");
@@ -22,7 +23,6 @@ public class ContactServlet extends HttpServlet {
         String message = request.getParameter("message");
         
         boolean dbSaved = false;
-        boolean emailSent = false;
         String errorMsg = "";
         
         // 1. Save to database
@@ -39,67 +39,52 @@ public class ContactServlet extends HttpServlet {
                 db.con.close();
                 dbSaved = true;
             } else {
-                errorMsg += "Database connection failed. ";
+                errorMsg = "Database connection failed.";
             }
         } catch (Exception e) {
             e.printStackTrace();
-            errorMsg += "DB Error: " + e.getMessage() + ". ";
+            errorMsg = "DB Error: " + e.getMessage();
         }
         
-        // 2. Send email via FormSubmit.co
-        try {
-            String formData = "name=" + URLEncoder.encode(name, "UTF-8")
-                    + "&email=" + URLEncoder.encode(email, "UTF-8")
-                    + "&subject=" + URLEncoder.encode(subject, "UTF-8")
-                    + "&message=" + URLEncoder.encode(message, "UTF-8")
-                    + "&_subject=" + URLEncoder.encode("New Contact Query from DeskSavvy", "UTF-8")
-                    + "&_captcha=false";
-            
-            URL url = new URL("https://formsubmit.co/el/jomola");
-            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-            conn.setRequestMethod("POST");
-            conn.setDoOutput(true);
-            conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-            conn.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36");
-            
-            // Set Referer and Origin headers to ensure FormSubmit knows where the query came from
-            String referer = request.getHeader("Referer");
-            if (referer == null) {
-                referer = "https://desksavvy-rnp1.onrender.com/contact.jsp";
-            }
-            conn.setRequestProperty("Referer", referer);
-            
-            String origin = request.getHeader("Origin");
-            if (origin == null) {
-                origin = "https://desksavvy-rnp1.onrender.com";
-            }
-            conn.setRequestProperty("Origin", origin);
-            
-            conn.setConnectTimeout(10000);
-            conn.setReadTimeout(10000);
-            
-            OutputStream os = conn.getOutputStream();
-            os.write(formData.getBytes("UTF-8"));
-            os.flush();
-            os.close();
-            
-            int responseCode = conn.getResponseCode();
-            if (responseCode >= 200 && responseCode < 400) {
-                emailSent = true;
-            } else {
-                errorMsg += "Email service returned code " + responseCode + ". ";
-            }
-            conn.disconnect();
-        } catch (Exception e) {
-            e.printStackTrace();
-            errorMsg += "Email Error: " + e.getMessage() + ". ";
-        }
-        
-        // 3. Redirect with status
+        // 2. If saved successfully, output auto-submitting HTML form to send mail via user browser
         if (dbSaved) {
-            response.sendRedirect("contact.jsp?status=success");
+            // Build absolute redirect URL dynamically for the _next parameter
+            String scheme = request.getScheme();
+            String serverName = request.getServerName();
+            int serverPort = request.getServerPort();
+            String contextPath = request.getContextPath();
+            
+            String baseUrl = scheme + "://" + serverName;
+            if (serverPort != 80 && serverPort != 443) {
+                baseUrl += ":" + serverPort;
+            }
+            baseUrl += contextPath;
+            String nextUrl = baseUrl + "/contact.jsp?status=success";
+
+            out.println("<!DOCTYPE html>");
+            out.println("<html>");
+            out.println("<head><title>Sending Message...</title></head>");
+            out.println("<body style='background:#f7f5f0; font-family:sans-serif; text-align:center; padding-top:100px;'>");
+            out.println("  <div style='display:inline-block; padding:30px; background:#fff; border-radius:12px; box-shadow:0 4px 12px rgba(0,0,0,0.05);'>");
+            out.println("    <p style='color:#1a7a6e; font-size:18px; font-weight:bold;'>Sending your message...</p>");
+            out.println("    <p style='color:#666;'>Please do not close this window.</p>");
+            out.println("  </div>");
+            out.println("  <form id='fsForm' action='https://formsubmit.co/el/jomola' method='POST'>");
+            out.println("    <input type='hidden' name='name' value='" + name.replace("'", "&#39;").replace("\"", "&quot;") + "'>");
+            out.println("    <input type='hidden' name='email' value='" + email.replace("'", "&#39;").replace("\"", "&quot;") + "'>");
+            out.println("    <input type='hidden' name='subject' value='" + subject.replace("'", "&#39;").replace("\"", "&quot;") + "'>");
+            out.println("    <input type='hidden' name='message' value='" + message.replace("'", "&#39;").replace("\"", "&quot;") + "'>");
+            out.println("    <input type='hidden' name='_subject' value='New Contact Query from DeskSavvy'>");
+            out.println("    <input type='hidden' name='_captcha' value='false'>");
+            out.println("    <input type='hidden' name='_next' value='" + nextUrl + "'>");
+            out.println("  </form>");
+            out.println("  <script>");
+            out.println("    document.getElementById('fsForm').submit();");
+            out.println("  </script>");
+            out.println("</body>");
+            out.println("</html>");
         } else {
-            response.sendRedirect("contact.jsp?status=error&msg=" + URLEncoder.encode(errorMsg, "UTF-8"));
+            response.sendRedirect("contact.jsp?status=error&msg=" + java.net.URLEncoder.encode(errorMsg, "UTF-8"));
         }
     }
 
