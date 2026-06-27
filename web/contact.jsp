@@ -457,13 +457,7 @@
 
           <!-- Right: Contact Form -->
           <div class="contact-form-wrapper">
-            <script>let submitted = false;</script>
-            <iframe name="hidden_iframe" id="hidden_iframe" style="display:none;" onload="if(submitted) { alert('Message sent successfully!'); submitted = false; document.getElementById('contactForm').reset(); }"></iframe>
-            <form id="contactForm" action="https://formsubmit.co/el/jomola" method="POST" target="hidden_iframe" onsubmit="submitted=true;">
-              <!-- Hidden fields for FormSubmit configuration -->
-              <input type="hidden" name="_subject" value="New Contact Query from DeskSavvy">
-              <input type="hidden" name="_captcha" value="false">
-
+            <form id="contactForm" action="contactSubmit" method="POST">
               <div class="form-group">
                 <label for="name">Full Name</label>
                 <input type="text" id="name" name="name" placeholder="John Doe" required>
@@ -488,6 +482,26 @@
                 Send Message <i class="fas fa-paper-plane"></i>
               </button>
             </form>
+
+            <%
+              String status = request.getParameter("status");
+              String errMsg = request.getParameter("msg");
+              if ("success".equals(status)) {
+            %>
+              <div style="margin-top:20px; padding:14px 20px; background:#e8f5e9; border:1px solid #a5d6a7; border-radius:10px; color:#2e7d32; font-size:14px; display:flex; align-items:center; gap:10px;">
+                <i class="fas fa-check-circle" style="font-size:18px;"></i>
+                <span><strong>Message sent!</strong> We'll get back to you shortly.</span>
+              </div>
+            <%
+              } else if ("error".equals(status)) {
+            %>
+              <div style="margin-top:20px; padding:14px 20px; background:#fff5f5; border:1px solid #ffc5c5; border-radius:10px; color:#c0392b; font-size:14px; display:flex; align-items:center; gap:10px;">
+                <i class="fas fa-exclamation-circle" style="font-size:18px;"></i>
+                <span><strong>Something went wrong.</strong> <%= errMsg != null ? errMsg : "Please try again later." %></span>
+              </div>
+            <%
+              }
+            %>
           </div>
 
         </div>
