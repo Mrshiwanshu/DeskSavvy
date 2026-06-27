@@ -69,7 +69,7 @@ public class ContactServlet extends HttpServlet {
             out.println("    <p style='color:#1a7a6e; font-size:18px; font-weight:bold;'>Sending your message...</p>");
             out.println("    <p style='color:#666;'>Please do not close this window.</p>");
             out.println("  </div>");
-            out.println("  <form id='fsForm' action='https://formsubmit.co/el/jomola' method='POST'>");
+            out.println("  <form id='fsForm' action='https://formsubmit.co/shiwanshu7545@gmail.com' method='POST'>");
             out.println("    <input type='hidden' name='name' value='" + name.replace("'", "&#39;").replace("\"", "&quot;") + "'>");
             out.println("    <input type='hidden' name='email' value='" + email.replace("'", "&#39;").replace("\"", "&quot;") + "'>");
             out.println("    <input type='hidden' name='subject' value='" + subject.replace("'", "&#39;").replace("\"", "&quot;") + "'>");
